@@ -1,0 +1,2738 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>THREADLY | Clothing Inventory</title>
+
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap');
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "DM Sans", sans-serif;
+    background: #f6f4ef;
+    color: #171717;
+}
+
+.app {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar {
+    width: 245px;
+    background: #171717;
+    color: white;
+    padding: 28px 18px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    z-index: 10;
+}
+
+.brand {
+    padding: 0 12px 35px;
+}
+
+.brand-name {
+    font-family: "Playfair Display", serif;
+    font-size: 25px;
+    letter-spacing: 1px;
+}
+
+.brand-sub {
+    font-size: 11px;
+    color: #9d9d9d;
+    margin-top: 5px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.menu-title {
+    font-size: 10px;
+    color: #777;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 0 12px;
+    margin-bottom: 10px;
+}
+
+.nav-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.nav-buttons button {
+    width: 100%;
+    border: none;
+    background: transparent;
+    color: #a9a9a9;
+    padding: 13px 14px;
+    text-align: left;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 14px;
+    transition: 0.25s;
+}
+
+.nav-buttons button:hover {
+    background: #292929;
+    color: white;
+    transform: translateX(3px);
+}
+
+.nav-buttons button:first-child {
+    background: #f0ede5;
+    color: #171717;
+}
+
+.sidebar-bottom {
+    margin-top: auto;
+    border-top: 1px solid #303030;
+    padding: 18px 12px 0;
+}
+
+.store-status {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: #bcbcbc;
+    font-size: 12px;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #7fc79a;
+}
+
+/* =========================
+   MAIN
+========================= */
+
+.main {
+    margin-left: 245px;
+    width: calc(100% - 245px);
+    padding: 30px 42px;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 35px;
+}
+
+.topbar-left {
+    display: flex;
+    flex-direction: column;
+}
+
+.mini-label {
+    font-size: 11px;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1.4px;
+    margin-bottom: 5px;
+}
+
+.topbar-title {
+    font-family: "Playfair Display", serif;
+    font-size: 25px;
+    margin: 0;
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: white;
+    padding: 8px 13px 8px 8px;
+    border-radius: 30px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.05);
+}
+
+.profile-circle {
+    width: 35px;
+    height: 35px;
+    background: #252525;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+}
+
+.profile-name {
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.profile-role {
+    font-size: 10px;
+    color: #888;
+}
+
+/* =========================
+   SECTIONS
+========================= */
+
+.section {
+    display: none;
+}
+
+.active {
+    display: block;
+}
+
+.page-heading {
+    margin-bottom: 25px;
+}
+
+.page-heading h1 {
+    font-family: "Playfair Display", serif;
+    font-size: 34px;
+    margin: 0 0 6px;
+}
+
+.page-heading p {
+    margin: 0;
+    color: #888;
+    font-size: 13px;
+}
+
+/* =========================
+   WELCOME
+========================= */
+
+.welcome {
+    background: #202020;
+    color: white;
+    border-radius: 22px;
+    padding: 32px;
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.welcome:after {
+    content: "";
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 50%;
+    right: 40px;
+    top: -100px;
+}
+
+.welcome small {
+    color: #aaa;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-size: 10px;
+}
+
+.welcome h2 {
+    font-family: "Playfair Display", serif;
+    font-size: 29px;
+    font-weight: 500;
+    margin: 8px 0;
+}
+
+.welcome p {
+    color: #aaa;
+    margin: 0;
+    font-size: 13px;
+}
+
+.welcome-badge {
+    background: #eeeae0;
+    color: #222;
+    padding: 12px 18px;
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: 600;
+    z-index: 2;
+}
+
+/* =========================
+   STAT CARDS
+========================= */
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
+    margin-bottom: 25px;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 18px;
+    border: 1px solid #e9e6df;
+    transition: 0.25s;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.07);
+}
+
+.card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-label {
+    font-size: 10px;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.card-icon {
+    width: 32px;
+    height: 32px;
+    background: #f2f0eb;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+}
+
+.card p {
+    font-size: 27px;
+    font-weight: 700;
+    margin: 18px 0 0;
+    letter-spacing: -1px;
+}
+
+.card-change {
+    font-size: 10px;
+    color: #7b7b7b;
+    margin-top: 7px;
+}
+
+/* =========================
+   DASHBOARD LOWER AREA
+========================= */
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 18px;
+}
+
+.panel {
+    background: white;
+    border: 1px solid #e9e6df;
+    border-radius: 18px;
+    padding: 23px;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.panel-header h3 {
+    margin: 0;
+    font-size: 15px;
+}
+
+.panel-header span {
+    font-size: 11px;
+    color: #999;
+}
+
+.quick-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.quick-action {
+    border: 1px solid #e5e2da;
+    background: #faf9f6;
+    padding: 18px 14px;
+    border-radius: 13px;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+    transition: 0.2s;
+}
+
+.quick-action:hover {
+    background: #202020;
+    color: white;
+}
+
+.quick-action strong {
+    display: block;
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+.quick-action span {
+    font-size: 10px;
+    color: #999;
+}
+
+.quick-action:hover span {
+    color: #bbb;
+}
+
+.analytics-box {
+    height: 150px;
+    display: flex;
+    align-items: flex-end;
+    gap: 13px;
+    padding: 15px 5px 5px;
+}
+
+.bar {
+    flex: 1;
+    background: #d5d0c5;
+    border-radius: 6px 6px 2px 2px;
+    transition: 0.3s;
+}
+
+.bar:hover {
+    background: #202020;
+}
+
+.bar:nth-child(1) { height: 38%; }
+.bar:nth-child(2) { height: 52%; }
+.bar:nth-child(3) { height: 42%; }
+.bar:nth-child(4) { height: 70%; }
+.bar:nth-child(5) { height: 58%; }
+.bar:nth-child(6) { height: 84%; }
+.bar:nth-child(7) { height: 68%; }
+
+.chart-labels {
+    display: flex;
+    justify-content: space-between;
+    color: #aaa;
+    font-size: 9px;
+    padding: 0 5px;
+}
+
+/* =========================
+   FORMS
+========================= */
+
+.form-box {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    border: 1px solid #e9e6df;
+    max-width: 650px;
+}
+
+label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #555;
+}
+
+.form-box input,
+.form-box select {
+    width: 100%;
+    padding: 13px 14px;
+    margin: 0 0 18px;
+    border: 1px solid #ddd9d0;
+    border-radius: 10px;
+    background: #faf9f6;
+    font-family: inherit;
+    outline: none;
+    transition: 0.2s;
+}
+
+.form-box input:focus,
+.form-box select:focus {
+    border-color: #333;
+    background: white;
+}
+
+.form-box button {
+    background: #202020;
+    color: white;
+    border: none;
+    padding: 13px 22px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.form-box button:hover {
+    background: #444;
+    transform: translateY(-2px);
+}
+
+/* =========================
+   TABLE
+========================= */
+
+.table-box {
+    background: white;
+    padding: 22px;
+    border-radius: 20px;
+    border: 1px solid #e9e6df;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 1050px;
+}
+
+th {
+    padding: 14px;
+    text-align: left;
+    background: #f7f5f0;
+    color: #888;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+td {
+    padding: 16px 14px;
+    border-bottom: 1px solid #eeeae3;
+    font-size: 13px;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+tr:hover td {
+    background: #faf9f6;
+}
+
+/* =========================
+   STATUS BADGES
+========================= */
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.status-badge::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+
+.in-stock {
+    background: #e8f5ec;
+    color: #28623b;
+}
+
+.in-stock::before {
+    background: #5eaa75;
+}
+
+.low-stock {
+    background: #fff4dc;
+    color: #8a6115;
+}
+
+.low-stock::before {
+    background: #d49a24;
+}
+
+.out-stock {
+    background: #fbe9e9;
+    color: #9a3d3d;
+}
+
+.out-stock::before {
+    background: #c75c5c;
+}
+
+.low-sales {
+    background: #fbe9e9;
+    color: #9a3d3d;
+}
+
+.low-sales::before {
+    background: #c75c5c;
+}
+
+.moderate-sales {
+    background: #fff4dc;
+    color: #8a6115;
+}
+
+.moderate-sales::before {
+    background: #d49a24;
+}
+
+.good-sales {
+    background: #e8f5ec;
+    color: #28623b;
+}
+
+.good-sales::before {
+    background: #5eaa75;
+}
+
+/* =========================
+   PRODUCT ACTIONS
+========================= */
+
+.action-buttons {
+    display: flex;
+    gap: 7px;
+    align-items: center;
+}
+
+.qr-button {
+    background: #202020;
+    color: white;
+    border: none;
+    padding: 8px 13px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.qr-button:hover {
+    background: #555;
+}
+
+.delete-button {
+    background: #f8e9e9;
+    color: #9a3d3d;
+    border: 1px solid #efd2d2;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.delete-button:hover {
+    background: #9a3d3d;
+    color: white;
+}
+
+/* =========================
+   BILLING
+========================= */
+
+.billing-layout {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 20px;
+    max-width: 950px;
+}
+
+.bill-summary {
+    background: #202020;
+    color: white;
+    border-radius: 20px;
+    padding: 28px;
+    min-height: 250px;
+}
+
+.bill-summary small {
+    color: #999;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.bill-summary h2 {
+    font-family: "Playfair Display", serif;
+    font-size: 30px;
+    margin: 15px 0;
+}
+
+.total {
+    font-size: 30px;
+    font-weight: 700;
+    margin: 20px 0;
+}
+
+.sale-success {
+    background: #e6f3e9;
+    color: #27633b;
+    padding: 12px;
+    border-radius: 9px;
+    margin-top: 15px;
+    display: none;
+    font-size: 12px;
+}
+
+/* =========================
+   EMPTY TABLE
+========================= */
+
+.empty-message {
+    text-align: center;
+    padding: 35px !important;
+    color: #999;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1200px) {
+
+    .cards {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+}
+
+@media (max-width: 1050px) {
+
+    .cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .dashboard-grid,
+    .billing-layout {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media (max-width: 750px) {
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        padding: 15px;
+    }
+
+    .app {
+        display: block;
+    }
+
+    .brand {
+        padding-bottom: 15px;
+    }
+
+    .nav-buttons {
+        flex-direction: row;
+        overflow-x: auto;
+    }
+
+    .nav-buttons button {
+        white-space: nowrap;
+        width: auto;
+    }
+
+    .sidebar-bottom {
+        display: none;
+    }
+
+    .main {
+        margin-left: 0;
+        width: 100%;
+        padding: 22px 16px;
+    }
+
+    .topbar {
+        margin-bottom: 25px;
+    }
+
+    .profile {
+        display: none;
+    }
+
+}
+
+@media (max-width: 500px) {
+
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+    .welcome {
+        padding: 24px;
+    }
+
+    .welcome-badge {
+        display: none;
+    }
+
+    .page-heading h1 {
+        font-size: 28px;
+    }
+
+    .form-box {
+        padding: 22px;
+    }
+
+}
+/* QR CODE WINDOW */
+.qr-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.qr-modal-content {
+    background: white;
+    border-radius: 18px;
+    padding: 28px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.qr-modal-content img {
+    width: 230px;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 20px auto;
+}
+
+.qr-modal-content h2 {
+    margin-top: 0;
+    font-family: "Playfair Display", serif;
+}
+
+.qr-modal-content button {
+    border: none;
+    border-radius: 9px;
+    padding: 11px 18px;
+    margin: 5px;
+    cursor: pointer;
+    background: #202020;
+    color: white;
+}
+
+.qr-modal-content .qr-close {
+    background: #eeeae0;
+    color: #202020;
+}
+
+@media print {
+    body * {
+        visibility: hidden;
+    }
+
+    #qrModal,
+    #qrModal * {
+        visibility: visible;
+    }
+
+    #qrModal {
+        display: flex !important;
+        position: absolute;
+        inset: 0;
+        background: white;
+    }
+
+    .qr-modal-content button {
+        display: none;
+    }
+}
+
+/* THREADLY student project palette: Marshmallow, Love Bird and Desert Rose */
+:root {
+    --marshmallow: #F0EEE4;
+    --love-bird: #C1DB3C;
+    --desert-rose: #CF6977;
+    --ink: #30342d;
+    --paper: #fffefa;
+    --soft-rose: #f8e8e8;
+    --soft-green: #eef4d5;
+}
+
+body {
+    background: var(--marshmallow);
+    color: var(--ink);
+    font-family: "DM Sans", "Trebuchet MS", sans-serif;
+    background-image: radial-gradient(rgba(94, 102, 63, .10) .7px, transparent .7px);
+    background-size: 18px 18px;
+}
+
+.sidebar {
+    background: #394331;
+    color: #fffefa;
+    border-right: 4px solid var(--love-bird);
+}
+.brand-name { color: var(--love-bird); letter-spacing: 2px; }
+.brand-sub, .menu-title { color: #d8dfc1; }
+.nav-buttons button { color: #f3f0e6; border-radius: 8px 13px 8px 13px; }
+.nav-buttons button:hover { background: rgba(193, 219, 60, .2); color: white; }
+.nav-buttons button:first-child { background: var(--love-bird); color: #293021; }
+.sidebar-bottom { border-color: rgba(255,255,255,.2); }
+.status-dot { background: var(--love-bird); box-shadow: 0 0 0 4px rgba(193,219,60,.16); }
+.main { padding-top: 34px; }
+.mini-label, .card-label, .menu-title { letter-spacing: 1.2px; }
+.mini-label { color: #75805a; }
+.topbar-title, .page-heading h1, .welcome h2 { color: #343b2d; }
+.profile { background: var(--paper); border: 1px solid #e3dfd1; box-shadow: 3px 4px 0 rgba(78,75,56,.08); }
+.profile-circle { background: var(--desert-rose); color: white; }
+.welcome {
+    color: var(--ink);
+    background: #fbf7ec;
+    border: 2px dashed #c8c99a;
+    border-radius: 14px 22px 16px 20px;
+    box-shadow: 5px 6px 0 rgba(94,102,63,.10);
+}
+.welcome:after { border-color: rgba(207,105,119,.23); }
+.welcome small { color: #8e5961; font-weight: 700; }
+.welcome h2 { font-family: "Playfair Display", Georgia, serif; }
+.welcome p { color: #6e7064; }
+.welcome-badge { background: var(--soft-green); color: #4e5c25; border: 1px solid #d5e29a; }
+.card, .panel, .form-box, .table-box {
+    background: var(--paper);
+    border-color: #e2dece;
+    border-radius: 13px 18px 14px 17px;
+    box-shadow: 3px 4px 0 rgba(78,75,56,.07);
+}
+.card:nth-child(2n) { border-top: 3px solid var(--love-bird); }
+.card:nth-child(3n) { border-top: 3px solid var(--desert-rose); }
+.card:hover { box-shadow: 5px 7px 0 rgba(78,75,56,.1); }
+.card-icon { background: var(--soft-green); color: #56632b; }
+.card p { color: #465039; }
+.quick-action { background: #fbf8ef; border-color: #e3decf; border-radius: 10px 14px; }
+.quick-action:hover { background: var(--desert-rose); color: white; }
+.bar { background: var(--love-bird); border-radius: 8px 8px 2px 2px; }
+.bar:nth-child(2n) { background: #d8b0a8; }
+.bar:hover { background: var(--desert-rose); }
+.form-box input, .form-box select { background: #fbf9f2; border-color: #d9d5c6; border-radius: 8px 12px; }
+.form-box input:focus, .form-box select:focus { border-color: #9cad4c; box-shadow: 0 0 0 3px rgba(193,219,60,.2); }
+.form-box button, .qr-button, .qr-close { background: #48543a; border-radius: 8px 12px; }
+.form-box button:hover, .qr-button:hover, .qr-close:hover { background: var(--desert-rose); }
+th { background: var(--soft-green); color: #59643b; }
+tr:hover td { background: #fbf6f0; }
+.in-stock, .good-sales { background: #edf3d7; color: #4a5b22; }
+.in-stock::before, .good-sales::before { background: #8ca733; }
+.low-stock, .moderate-sales { background: #fbefd7; color: #805c26; }
+.low-stock::before, .moderate-sales::before { background: #c89a3a; }
+.out-stock, .low-sales { background: var(--soft-rose); color: #9b4855; }
+.out-stock::before, .low-sales::before { background: var(--desert-rose); }
+.delete-button { background: var(--soft-rose); color: #9b4855; border-color: #efd0d2; }
+.delete-button:hover { background: var(--desert-rose); }
+.bill-summary { background: #48543a; border: 3px dashed rgba(193,219,60,.65); border-radius: 14px 20px; }
+.sale-success { background: var(--soft-green); color: #48543a; }
+.qr-modal-content { background: var(--paper); border: 3px dashed #c8c99a; }
+button, input, select { accent-color: var(--desert-rose); }
+@media (max-width: 900px) {
+    .main { padding-left: 24px; padding-right: 24px; }
+}
+@media (max-width: 600px) {
+    .welcome { padding: 23px; }
+    .welcome h2 { font-size: 24px; }
+    .profile { padding-right: 9px; }
+}
+
+/* Size-run builder */
+.inventory-builder {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(230px, .65fr);
+    align-items: stretch;
+    gap: 22px;
+    max-width: 1020px;
+}
+.inventory-form { max-width: none; padding: 28px; }
+.form-step { display: flex; align-items: center; gap: 11px; margin-bottom: 18px; }
+.form-step > span {
+    display: grid; place-items: center; width: 34px; height: 34px;
+    border-radius: 50%; background: var(--love-bird); color: #394331;
+    font-family: Georgia, serif; font-weight: 700;
+}
+.form-step strong, .form-step small { display: block; }
+.form-step strong { font-size: 14px; }
+.form-step small { margin-top: 3px; color: #88897b; font-size: 11px; }
+.form-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-two-col input { margin-bottom: 18px; }
+.size-builder-heading { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 10px; }
+.size-builder-heading .form-step { margin-bottom: 12px; }
+.add-size-button { background: var(--soft-green); color: #4a5b22; border: 1px dashed #aaba63; padding: 9px 12px; border-radius: 9px 13px; font: 700 11px "DM Sans", sans-serif; cursor: pointer; }
+.size-run-labels, .size-row { display: grid; grid-template-columns: 1fr 1fr 34px; gap: 10px; align-items: center; }
+.size-run-labels { padding: 0 2px 6px; color: #8a897b; font-size: 10px; text-transform: uppercase; letter-spacing: .8px; }
+.size-row { margin-bottom: 8px; }
+.size-row input { margin: 0; padding: 10px 12px; }
+.remove-size-button { width: 34px; height: 38px; border: 1px solid #efd0d2; border-radius: 9px 12px; color: #9b4855; background: var(--soft-rose); font-size: 20px; cursor: pointer; }
+.helper-note { margin: 12px 0 18px; color: #7e7f72; font-size: 11px; line-height: 1.55; }
+.inventory-message { min-height: 0; margin-bottom: 0; font-size: 12px; line-height: 1.5; }
+.inventory-message:not(:empty) { margin-bottom: 12px; padding: 10px 12px; border-radius: 9px 13px; }
+.inventory-message.error { background: var(--soft-rose); color: #914653; }
+.inventory-message.success { background: var(--soft-green); color: #4b5b25; }
+.inventory-message.partial, .inventory-message.working { background: #fbefd7; color: #805c26; }
+.add-inventory-button { display: flex; justify-content: space-between; align-items: center; width: 100%; background: #48543a; color: white; border: 0; padding: 14px 17px; border-radius: 9px 14px; font: 700 13px "DM Sans", sans-serif; cursor: pointer; }
+.add-inventory-button:hover { background: var(--desert-rose); }
+.add-inventory-button:disabled { opacity: .65; cursor: wait; }
+.size-run-preview { position: relative; overflow: hidden; padding: 26px 24px; background: #f6dadd; border: 2px dashed #d9a2a5; border-radius: 19px 14px 21px 15px; box-shadow: 4px 5px 0 rgba(78,75,56,.08); }
+.preview-scribble { color: #8c4c57; font: italic 17px Georgia, serif; transform: rotate(-4deg); }
+.preview-shirt { display: grid; place-items: center; width: 88px; height: 88px; margin: 22px auto 18px; background: var(--love-bird); color: #55622c; border-radius: 47% 53% 45% 55%; font-size: 39px; box-shadow: 7px 8px 0 rgba(98,105,52,.12); }
+.size-run-preview h3 { margin: 0; color: #473b36; font: 600 25px/1.12 "Playfair Display", Georgia, serif; }
+.size-run-preview p { color: #725e5a; font-size: 12px; line-height: 1.6; }
+.preview-swatches { display: flex; align-items: center; gap: 7px; margin-top: 22px; }
+.preview-swatches i { width: 17px; height: 17px; border-radius: 50%; background: var(--marshmallow); border: 1px solid rgba(57,67,49,.15); }
+.preview-swatches i:nth-child(2) { background: var(--love-bird); }
+.preview-swatches i:nth-child(3) { background: var(--desert-rose); }
+.preview-swatches span { margin-left: auto; color: #8c4c57; font-size: 9px; letter-spacing: 1px; }
+
+/* Checkout counter and printable ticket */
+.billing-topline { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+.register-stamp { display: flex; align-items: center; gap: 8px; margin-top: 8px; padding: 10px 13px; background: var(--soft-green); color: #56632b; border: 1px dashed #aaba63; border-radius: 11px 15px; font-size: 10px; font-weight: 800; letter-spacing: .8px; white-space: nowrap; }
+.register-stamp small { margin-left: 5px; color: #7b8557; font-size: 8px; }
+.register-dot { width: 8px; height: 8px; background: #8ea937; border-radius: 50%; box-shadow: 0 0 0 4px rgba(193,219,60,.25); }
+.billing-layout { grid-template-columns: minmax(0, 1.55fr) minmax(310px, .85fr); gap: 18px; max-width: none; align-items: start; }
+.catalog-panel, .cart-panel { min-width: 0; background: var(--paper); border: 1px solid #e2dece; border-radius: 16px 20px; box-shadow: 3px 4px 0 rgba(78,75,56,.07); }
+.catalog-panel { padding: 22px; }
+.cart-panel { position: sticky; top: 18px; overflow: hidden; background: #fbf7ec; border: 2px dashed #c8c99a; }
+.catalog-heading, .cart-heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.eyebrow { color: #8b716b; font-size: 9px; font-weight: 800; letter-spacing: 1.5px; }
+.catalog-heading h2, .cart-heading h2 { margin: 5px 0 0; color: #394331; font: 600 21px "Playfair Display", Georgia, serif; }
+.catalog-count { padding: 6px 9px; background: var(--soft-green); color: #59643b; border-radius: 20px; font-size: 10px; font-weight: 700; white-space: nowrap; }
+.catalog-search-wrap { display: flex; align-items: center; gap: 9px; margin: 17px 0 12px; padding: 0 12px; background: #fbf9f2; border: 1px solid #e1ddce; border-radius: 10px 14px; }
+.catalog-search-wrap > span { color: #8a9470; font-size: 23px; }
+.catalog-search-wrap input { width: 100%; margin: 0; padding: 12px 0; border: 0; background: transparent; outline: 0; font: 12px "DM Sans", sans-serif; }
+.catalog-search-wrap:focus-within { border-color: #9cad4c; box-shadow: 0 0 0 3px rgba(193,219,60,.18); }
+.category-filters { display: flex; gap: 7px; overflow-x: auto; padding: 1px 1px 10px; }
+.category-chip { flex: 0 0 auto; padding: 7px 11px; background: white; color: #737666; border: 1px solid #e4dfd2; border-radius: 20px; font: 700 10px "DM Sans", sans-serif; cursor: pointer; }
+.category-chip.selected { background: #48543a; border-color: #48543a; color: white; }
+.billing-catalog { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; max-height: min(65vh, 660px); overflow: auto; padding: 2px 3px 4px 1px; }
+.product-tile { display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: 10px; position: relative; min-width: 0; padding: 12px; background: #fffefa; border: 1px solid #e9e3d7; border-radius: 11px 16px; transition: transform .18s, box-shadow .18s; }
+.product-tile:hover { transform: translateY(-2px) rotate(-.2deg); box-shadow: 3px 5px 0 rgba(78,75,56,.08); }
+.product-art { display: grid; place-items: center; width: 48px; height: 54px; background: #edf2d4; color: #788b35; border-radius: 12px 8px 15px 9px; font: 24px Georgia, serif; }
+.product-tile:nth-child(3n + 2) .product-art { background: #f6dadd; color: #a95462; }
+.product-tile:nth-child(3n) .product-art { background: #f6ecd7; color: #ad8650; }
+.product-tile-details { min-width: 0; }
+.product-category-label { display: block; overflow: hidden; color: #8b8878; font-size: 9px; text-overflow: ellipsis; white-space: nowrap; text-transform: uppercase; letter-spacing: .8px; }
+.product-tile h3 { overflow: hidden; margin: 3px 0 8px; color: #3a4034; font: 700 12px/1.3 "DM Sans", sans-serif; text-overflow: ellipsis; white-space: nowrap; }
+.product-tile-bottom { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
+.size-tag { padding: 3px 6px; background: var(--marshmallow); color: #65704b; border-radius: 5px 8px; font-size: 9px; font-weight: 700; }
+.stock-note { color: #7d806f; font-size: 9px; }
+.stock-note.nearly-gone { color: #a34e59; font-weight: 700; }
+.product-tile-action { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; padding-top: 8px; border-top: 1px dashed #e4dfd2; }
+.product-tile-action > strong { color: #424b35; font-size: 13px; }
+.add-to-bill { padding: 7px 11px; background: var(--soft-green); color: #52632b; border: 1px solid #d7e29d; border-radius: 8px 11px; font: 800 10px "DM Sans", sans-serif; cursor: pointer; }
+.add-to-bill:hover { background: var(--love-bird); }
+.add-to-bill:disabled { opacity: .55; cursor: wait; }
+.catalog-empty { grid-column: 1 / -1; display: grid; place-items: center; min-height: 190px; padding: 25px; color: #77796d; text-align: center; }
+.catalog-empty > span { color: var(--desert-rose); font-size: 32px; }
+.catalog-empty strong { margin-top: 8px; color: #48543a; font: 600 18px "Playfair Display", Georgia, serif; }
+.catalog-empty p { max-width: 250px; font-size: 11px; line-height: 1.5; }
+.catalog-empty.compact { min-height: 90px; font-size: 12px; }
+.cart-heading { padding: 20px 19px 16px; border-bottom: 1px solid #e6e1d2; }
+.cart-heading h2 { display: flex; align-items: center; gap: 8px; }
+.cart-count { display: inline-grid; place-items: center; min-width: 22px; height: 22px; padding: 0 5px; background: var(--desert-rose); color: white; border-radius: 50%; font: 700 10px "DM Sans", sans-serif; }
+.cart-doodle { color: var(--desert-rose); font-size: 29px; transform: rotate(10deg); }
+.cart-lines { max-height: 42vh; min-height: 150px; overflow-y: auto; padding: 6px 17px; }
+.cart-empty { display: grid; justify-items: center; padding: 20px 10px; color: #77796d; text-align: center; }
+.cart-empty > span { font-size: 29px; }
+.cart-empty strong { margin-top: 8px; color: #48543a; font: 600 16px "Playfair Display", Georgia, serif; }
+.cart-empty p { max-width: 210px; font-size: 11px; line-height: 1.5; }
+.cart-line { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 9px; align-items: center; padding: 12px 0; border-bottom: 1px dashed #dcd7c8; }
+.cart-line-info { display: grid; min-width: 0; gap: 3px; }
+.cart-line-info strong { overflow: hidden; color: #394331; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+.cart-line-info span, .cart-line-info small { color: #797b70; font-size: 9px; }
+.cart-line-controls { display: flex; align-items: center; gap: 6px; }
+.cart-line-controls button { display: grid; place-items: center; width: 23px; height: 23px; padding: 0; background: white; color: #4e5d34; border: 1px solid #d9dfb8; border-radius: 7px 9px; font-size: 15px; cursor: pointer; }
+.cart-line-controls button:disabled { opacity: .4; cursor: not-allowed; }
+.cart-line-controls span { min-width: 12px; color: #44483c; font-size: 11px; text-align: center; }
+.cart-line-total { color: #424b35; font-size: 10px; white-space: nowrap; }
+.cart-footer { padding: 16px 18px 18px; background: #f5f0e4; border-top: 1px solid #e6e1d2; }
+.cart-total-row { display: flex; justify-content: space-between; align-items: baseline; color: #696b5d; font-size: 12px; }
+.cart-total-row strong { color: #35402e; font: 700 23px "Playfair Display", Georgia, serif; }
+.tax-note { margin: 5px 0 13px; color: #898779; font-size: 9px; }
+.checkout-button { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 13px 15px; color: white; background: #48543a; border: 0; border-radius: 9px 14px; font: 800 12px "DM Sans", sans-serif; cursor: pointer; }
+.checkout-button:hover:not(:disabled) { background: var(--desert-rose); }
+.checkout-button:disabled { opacity: .45; cursor: not-allowed; }
+.sale-message { margin-top: 10px; color: #4b5b25; font-size: 10px; line-height: 1.5; }
+.sale-message:empty { display: none; }
+.sale-message.error { color: #984b57; }
+.sale-message.partial, .sale-message.working { color: #805c26; }
+.receipt-button { margin-top: 9px; padding: 0; background: transparent; color: #65752f; border: 0; font: 700 10px "DM Sans", sans-serif; text-decoration: underline; cursor: pointer; }
+.receipt-modal { position: fixed; inset: 0; z-index: 30; display: grid; place-items: center; padding: 20px; overflow-y: auto; background: rgba(48,52,45,.48); }
+.receipt-modal[hidden] { display: none; }
+.receipt-paper { position: relative; width: min(100%, 390px); padding: 30px 28px 24px; background: #fffefa; border: 1px dashed #bcb99e; box-shadow: 7px 8px 0 rgba(35,38,31,.15); color: #394331; }
+.receipt-dismiss { position: absolute; top: 8px; right: 10px; background: transparent; border: 0; color: #8e8b7f; font-size: 22px; cursor: pointer; }
+.receipt-brand { color: #687744; font: 700 13px "DM Sans", sans-serif; letter-spacing: 2px; text-align: center; }
+.receipt-kicker, .receipt-thanks { color: #88897b; font: italic 11px Georgia, serif; text-align: center; }
+.receipt-paper h2 { margin: 19px 0 5px; font: 700 16px "DM Sans", sans-serif; letter-spacing: 2px; text-align: center; }
+.receipt-meta { margin-bottom: 17px; color: #858577; font-size: 10px; text-align: center; }
+.receipt-lines { border-top: 1px dashed #c8c4b1; }
+.receipt-line { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px dashed #dedacb; font-size: 10px; }
+.receipt-line strong { white-space: nowrap; }
+.receipt-grand-total { display: flex; justify-content: space-between; padding: 15px 0 7px; font-size: 11px; font-weight: 800; letter-spacing: 1px; }
+.receipt-grand-total strong { font-size: 17px; letter-spacing: 0; }
+.receipt-thanks { margin: 14px 0 18px; }
+.receipt-print { width: 100%; padding: 11px; background: #48543a; color: white; border: 0; border-radius: 8px 12px; font: 700 11px "DM Sans", sans-serif; cursor: pointer; }
+@media print {
+    body * { visibility: hidden !important; }
+    #receiptModal, #receiptModal * { visibility: visible !important; }
+    #receiptModal { position: absolute; inset: 0; display: block; padding: 0; overflow: visible; background: white; }
+    .receipt-paper { width: 100%; max-width: 100%; border: 0; box-shadow: none; }
+    .receipt-dismiss, .receipt-print { display: none !important; }
+}
+@media (max-width: 1050px) {
+    .inventory-builder { grid-template-columns: 1fr; }
+    .size-run-preview { display: none; }
+    .cart-panel { position: static; }
+    .billing-layout { grid-template-columns: 1fr; }
+}
+@media (max-width: 750px) {
+    .billing-topline { display: block; }
+    .register-stamp { width: fit-content; margin: -10px 0 18px; }
+    .billing-catalog { grid-template-columns: 1fr; max-height: none; }
+    .cart-lines { max-height: 40vh; }
+}
+@media (max-width: 520px) {
+    .inventory-form, .catalog-panel { padding: 18px; }
+    .form-two-col { grid-template-columns: 1fr; gap: 0; }
+    .size-builder-heading { align-items: flex-start; flex-direction: column; }
+    .size-run-labels, .size-row { grid-template-columns: .9fr 1.1fr 32px; gap: 7px; }
+    .cart-line { grid-template-columns: minmax(0, 1fr) auto; }
+    .cart-line-total { grid-column: 2; text-align: right; }
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- =========================
+     SIDEBAR
+========================= -->
+
+<aside class="sidebar">
+
+    <div class="brand">
+
+        <div class="brand-name">
+            THREADLY
+        </div>
+
+        <div class="brand-sub">
+            Clothing Inventory
+        </div>
+
+    </div>
+
+    <div class="menu-title">
+        Management
+    </div>
+
+    <div class="nav-buttons">
+
+        <button onclick="showSection('dashboard')">
+            ◉ &nbsp; Overview
+        </button>
+
+        <button onclick="showSection('inventory')">
+            ＋ &nbsp; Add Inventory
+        </button>
+
+        <button onclick="showSection('products')">
+            □ &nbsp; Products
+        </button>
+
+        <button onclick="showSection('billing')">
+            ₹ &nbsp; Billing
+        </button>
+
+        <button onclick="showSection('sales')">
+            ↗ &nbsp; Sales History
+        </button>
+
+    </div>
+
+    <div class="sidebar-bottom">
+
+        <div class="store-status">
+
+            <span class="status-dot"></span>
+
+            Store system online
+
+        </div>
+
+    </div>
+
+</aside>
+
+
+<!-- =========================
+     MAIN
+========================= -->
+
+<main class="main">
+
+
+<!-- TOP BAR -->
+
+<div class="topbar">
+
+    <div class="topbar-left">
+
+        <div class="mini-label">
+            Inventory Management
+        </div>
+
+        <h2 class="topbar-title">
+            Store Dashboard
+        </h2>
+
+    </div>
+
+    <div class="profile">
+
+        <div class="profile-circle">
+            H
+        </div>
+
+        <div>
+
+            <div class="profile-name">
+                Hasini
+            </div>
+
+            <div class="profile-role">
+                Store Manager
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     DASHBOARD
+========================= -->
+
+<div id="dashboard" class="section active">
+
+    <div class="welcome">
+
+        <div>
+
+            <small>
+                Welcome back
+            </small>
+
+            <h2>
+                Your store at a glance.
+            </h2>
+
+            <p>
+                Track products, stock and sales from one place.
+            </p>
+
+        </div>
+
+        <div class="welcome-badge">
+            ● System Active
+        </div>
+
+    </div>
+
+
+    <!-- STAT CARDS -->
+
+    <div class="cards">
+
+        <!-- PRODUCTS -->
+
+        <div class="card">
+
+            <div class="card-top">
+
+                <span class="card-label">
+                    Products
+                </span>
+
+                <span class="card-icon">
+                    ◇
+                </span>
+
+            </div>
+
+            <p id="totalProducts">
+                0
+            </p>
+
+            <div class="card-change">
+                Total products in catalogue
+            </div>
+
+        </div>
+
+
+        <!-- STOCK -->
+
+        <div class="card">
+
+            <div class="card-top">
+
+                <span class="card-label">
+                    Stock
+                </span>
+
+                <span class="card-icon">
+                    □
+                </span>
+
+            </div>
+
+            <p id="totalStock">
+                0
+            </p>
+
+            <div class="card-change">
+                Units currently available
+            </div>
+
+        </div>
+
+
+        <!-- SALES -->
+
+        <div class="card">
+
+            <div class="card-top">
+
+                <span class="card-label">
+                    Sales
+                </span>
+
+                <span class="card-icon">
+                    ₹
+                </span>
+
+            </div>
+
+            <p id="totalSales">
+                ₹0
+            </p>
+
+            <div class="card-change">
+                Total recorded revenue
+            </div>
+
+        </div>
+
+
+        <!-- LOW STOCK -->
+
+        <div class="card">
+
+            <div class="card-top">
+
+                <span class="card-label">
+                    Low Stock
+                </span>
+
+                <span class="card-icon">
+                    !
+                </span>
+
+            </div>
+
+            <p id="lowStock">
+                0
+            </p>
+
+            <div class="card-change">
+                Products needing attention
+            </div>
+
+        </div>
+
+
+        <!-- LOW SALES -->
+
+        <div class="cards">
+
+            <div class="card-top">
+
+                <span class="card-label">
+                    Low Sales
+                </span>
+
+                <span class="card-icon">
+                    ↓
+                </span>
+
+            </div>
+
+            <p id="lowSales">
+                0
+            </p>
+
+            <div class="card-change">
+                Products with slow sales
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- LOWER DASHBOARD -->
+
+    <div class="dashboard-grid">
+
+
+        <!-- ANALYTICS -->
+
+        <div class="panel">
+
+            <div class="panel-header">
+
+                <h3>
+                    Sales Overview
+                </h3>
+
+                <span>
+                    Weekly activity
+                </span>
+
+            </div>
+
+            <div class="analytics-box">
+
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+
+            </div>
+
+            <div class="chart-labels">
+
+                <span>Mon</span>
+                <span>Tue</span>
+                <span>Wed</span>
+                <span>Thu</span>
+                <span>Fri</span>
+                <span>Sat</span>
+                <span>Sun</span>
+
+            </div>
+
+        </div>
+
+
+        <!-- QUICK ACTIONS -->
+
+        <div class="panel">
+
+            <div class="panel-header">
+
+                <h3>
+                    Quick Actions
+                </h3>
+
+                <span>
+                    Shortcuts
+                </span>
+
+            </div>
+
+            <div class="quick-actions">
+
+                <button
+                    class="quick-action"
+                    onclick="showSection('inventory')"
+                >
+
+                    <strong>
+                        ＋ Add Product
+                    </strong>
+
+                    <span>
+                        Add new stock
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="quick-action"
+                    onclick="showSection('products')"
+                >
+
+                    <strong>
+                        □ View Products
+                    </strong>
+
+                    <span>
+                        Manage catalogue
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="quick-action"
+                    onclick="showSection('billing')"
+                >
+
+                    <strong>
+                        ₹ New Bill
+                    </strong>
+
+                    <span>
+                        Record a sale
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="quick-action"
+                    onclick="showSection('sales')"
+                >
+
+                    <strong>
+                        ↗ Sales
+                    </strong>
+
+                    <span>
+                        View transactions
+                    </span>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     ADD INVENTORY
+========================= -->
+
+<div id="inventory" class="section">
+
+    <div class="page-heading">
+
+        <h1>
+            Add Inventory
+        </h1>
+
+        <p>
+            Add a new clothing product to your store catalogue.
+        </p>
+
+    </div>
+
+
+    <div class="inventory-builder">
+        <div class="inventory-form form-box">
+            <div class="form-step"><span>01</span><div><strong>What are we adding?</strong><small>One product, shared details</small></div></div>
+            <label for="productName">Product name</label>
+            <input type="text" id="productName" placeholder="Example: Weekend Garden Tee" autocomplete="off">
+
+            <div class="form-two-col">
+                <div><label for="category">Category</label><input type="text" id="category" placeholder="T-Shirt"></div>
+                <div><label for="price">Price per piece (₹)</label><input type="number" id="price" placeholder="899" min="1" step="0.01"></div>
+            </div>
+
+            <div class="size-builder-heading">
+                <div class="form-step"><span>02</span><div><strong>Pick your size run</strong><small>Enter stock for each size</small></div></div>
+                <button class="add-size-button" type="button" onclick="addSizeRow()">＋ Add size</button>
+            </div>
+            <div class="size-run-labels"><span>Size</span><span>Pieces to add</span><span></span></div>
+            <div id="sizeRows" class="size-rows"></div>
+            <p class="helper-note">Tip: leave a size blank if you don't have it in this batch. Each size becomes its own scannable stock item.</p>
+            <div id="inventoryMessage" class="inventory-message" role="status" aria-live="polite"></div>
+            <button id="addInventoryButton" class="add-inventory-button" type="button" onclick="addProduct()">Add size run <span>↗</span></button>
+        </div>
+
+        <aside class="size-run-preview">
+            <div class="preview-scribble">your size run ✎</div>
+            <div class="preview-shirt" aria-hidden="true">✿</div>
+            <h3>One style,<br>all the right fits.</h3>
+            <p>Keep a tee's S, M, L and XL together while every size stays separately countable at checkout.</p>
+            <div class="preview-swatches"><i></i><i></i><i></i><span>THREADLY studio</span></div>
+        </aside>
+    </div>
+
+</div>
+
+
+<!-- =========================
+     PRODUCTS
+========================= -->
+
+<div id="products" class="section">
+
+    <div class="page-heading">
+
+        <h1>
+            Products
+        </h1>
+
+        <p>
+            Manage your catalogue, monitor stock and track sales performance.
+        </p>
+
+    </div>
+
+
+    <div class="table-box">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>ID</th>
+
+                    <th>Product</th>
+
+                    <th>Category</th>
+
+                    <th>Size</th>
+
+                    <th>Price</th>
+
+                    <th>Stock</th>
+
+                    <th>Stock Status</th>
+
+                    <th>Sold</th>
+
+                    <th>Sales Status</th>
+
+                    <th>Actions</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="inventoryTable">
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     BILLING
+========================= -->
+
+<div id="billing" class="section">
+
+    <div class="billing-topline">
+        <div class="page-heading"><h1>Little checkout corner</h1><p>Build a bill, keep an eye on the sizes, and let stock update as you ring things up.</p></div>
+        <div class="register-stamp"><span class="register-dot"></span> REGISTER READY <small>THREADLY / 01</small></div>
+    </div>
+
+    <div class="billing-layout">
+        <section class="catalog-panel">
+            <div class="catalog-heading"><div><span class="eyebrow">THE SHOP FLOOR</span><h2>Pick something lovely</h2></div><span id="catalogCount" class="catalog-count">Loading…</span></div>
+            <label class="catalog-search-wrap" for="catalogSearch"><span>⌕</span><input id="catalogSearch" type="search" placeholder="Find a style, category or size…" autocomplete="off" oninput="renderBillingCatalog()"></label>
+            <div id="categoryFilters" class="category-filters" aria-label="Filter products by category"></div>
+            <div id="billingCatalog" class="billing-catalog" aria-live="polite"></div>
+        </section>
+
+        <aside class="cart-panel">
+            <div class="cart-heading"><div><span class="eyebrow">THE LITTLE TICKET</span><h2>Your basket <span id="cartCount" class="cart-count">0</span></h2></div><span class="cart-doodle" aria-hidden="true">♡</span></div>
+            <div id="cartLines" class="cart-lines"><div class="cart-empty"><span>🛍️</span><strong>It's a fresh page!</strong><p>Add a style from the shop floor to start a bill.</p></div></div>
+            <div class="cart-footer">
+                <div class="cart-total-row"><span>Bill total</span><strong>₹<span id="billingTotal">0</span></strong></div>
+                <p class="tax-note">Each line is recorded in sales history.</p>
+                <button id="checkoutButton" class="checkout-button" type="button" onclick="completeSale()" disabled>Ring it up <span>↗</span></button>
+                <div id="saleMessage" class="sale-message" role="status" aria-live="polite"></div>
+                <button id="receiptButton" class="receipt-button" type="button" onclick="showReceipt()" hidden>Print last receipt</button>
+            </div>
+        </aside>
+    </div>
+
+</div>
+
+
+<!-- =========================
+     SALES HISTORY
+========================= -->
+
+<div id="sales" class="section">
+
+    <div class="page-heading">
+
+        <h1>
+            Sales History
+        </h1>
+
+        <p>
+            Review all completed transactions.
+        </p>
+
+    </div>
+
+
+    <div class="table-box">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Sale ID</th>
+
+                    <th>Product</th>
+
+                    <th>Quantity</th>
+
+                    <th>Total</th>
+
+                    <th>Date</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="salesTable">
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+</main>
+
+</div>
+
+<div id="qrModal" class="qr-modal">
+    <div class="qr-modal-content">
+        <h2 id="qrProductName">Product QR Code</h2>
+
+        <p>Scan this QR code to view product details.</p>
+
+        <img id="qrImage" src="" alt="Product QR Code">
+
+        <p id="qrStatus"></p>
+
+        <button onclick="window.print()">Print QR</button>
+
+        <button class="qr-close" onclick="closeQR()">
+            Close
+        </button>
+    </div>
+</div>
+<div id="receiptModal" class="receipt-modal" hidden>
+    <article class="receipt-paper">
+        <button class="receipt-dismiss" type="button" onclick="closeReceipt()" aria-label="Close receipt">×</button>
+        <div class="receipt-brand">✿ THREADLY ✿</div>
+        <p class="receipt-kicker">A little something for your wardrobe</p>
+        <h2>SALE RECEIPT</h2>
+        <div id="receiptMeta" class="receipt-meta"></div>
+        <div id="receiptLines" class="receipt-lines"></div>
+        <div class="receipt-grand-total"><span>TOTAL</span><strong id="receiptTotal">₹0</strong></div>
+        <p class="receipt-thanks">Thanks for shopping small ♡</p>
+        <button class="receipt-print" type="button" onclick="window.print()">Print this little ticket</button>
+    </article>
+</div>
+<script>
+
+/* =========================
+   SHOW SECTION
+========================= */
+
+function showSection(sectionId) {
+
+    document.querySelectorAll(".section")
+        .forEach(section => {
+            section.classList.remove("active");
+        });
+
+    document.getElementById(sectionId)
+        .classList.add("active");
+
+
+    if (sectionId === "dashboard") {
+        loadDashboard();
+    }
+
+
+    if (sectionId === "products") {
+        loadInventory();
+    }
+
+
+    if (sectionId === "billing") {
+        loadBillingProducts();
+    }
+
+
+    if (sectionId === "sales") {
+        loadSales();
+    }
+
+}
+
+
+/* =========================
+   DASHBOARD
+========================= */
+
+async function loadDashboard() {
+
+    try {
+
+        const response =
+            await fetch("/api/dashboard");
+
+        const data =
+            await response.json();
+
+
+        document.getElementById("totalProducts")
+            .textContent = data.totalProducts;
+
+
+        document.getElementById("totalStock")
+            .textContent = data.totalStock;
+
+
+        document.getElementById("totalSales")
+            .textContent = "₹" + data.totalSales;
+
+
+        document.getElementById("lowStock")
+            .textContent = data.lowStock;
+
+
+        document.getElementById("lowSales")
+            .textContent = data.lowSales;
+
+    }
+
+    catch (error) {
+
+        console.error("Dashboard error:", error);
+
+    }
+
+}
+
+
+/* =========================
+   GET STOCK STATUS CLASS
+========================= */
+
+function getStockClass(status) {
+
+    if (status === "In Stock") {
+        return "in-stock";
+    }
+
+    if (status === "Low Stock") {
+        return "low-stock";
+    }
+
+    return "out-stock";
+
+}
+
+
+/* =========================
+   GET SALES STATUS CLASS
+========================= */
+
+function getSalesClass(status) {
+
+    if (status === "Good Sales") {
+        return "good-sales";
+    }
+
+    if (status === "Moderate Sales") {
+        return "moderate-sales";
+    }
+
+    return "low-sales";
+
+}
+
+
+/* =========================
+   LOAD INVENTORY
+========================= */
+
+async function loadInventory() {
+
+    try {
+
+        const response =
+            await fetch("/api/inventory");
+
+        const products =
+            await response.json();
+
+
+        const table =
+            document.getElementById("inventoryTable");
+
+
+        table.innerHTML = "";
+
+
+        if (products.length === 0) {
+
+            table.innerHTML = `
+
+                <tr>
+
+                    <td
+                        colspan="10"
+                        class="empty-message"
+                    >
+
+                        No products in inventory.
+
+                    </td>
+
+                </tr>
+
+            `;
+
+            return;
+
+        }
+
+
+        products.forEach(product => {
+
+            const row =
+                document.createElement("tr");
+
+
+            const stockClass =
+                getStockClass(product.stockStatus);
+
+
+            const salesClass =
+                getSalesClass(product.salesStatus);
+
+
+            row.innerHTML = `
+
+                <td>
+                    ${product.id}
+                </td>
+
+                <td>
+                    <strong>${product.name}</strong>
+                </td>
+
+                <td>
+                    ${product.category}
+                </td>
+
+                <td>
+                    ${product.size}
+                </td>
+
+                <td>
+                    ₹${product.price}
+                </td>
+
+                <td>
+                    <strong>${product.stock}</strong>
+                </td>
+
+                <td>
+
+                    <span class="status-badge ${stockClass}">
+                        ${product.stockStatus}
+                    </span>
+
+                </td>
+
+                <td>
+                    ${product.totalSold}
+                </td>
+
+                <td>
+
+                    <span class="status-badge ${salesClass}">
+                        ${product.salesStatus}
+                    </span>
+
+                </td>
+
+                <td>
+
+                    <div class="action-buttons">
+
+                        <button
+                            class="qr-button"
+                            onclick="openQR(${product.id})"
+                        >
+                            QR
+                        </button>
+
+                        <button
+                            class="delete-button"
+                            onclick="deleteProduct(${product.id}, '${escapeProductName(product.name)}')"
+                        >
+                            Delete
+                        </button>
+
+                    </div>
+
+                </td>
+
+            `;
+
+
+            table.appendChild(row);
+
+        });
+
+    }
+
+    catch (error) {
+
+        console.error("Inventory error:", error);
+
+        alert("Unable to load inventory.");
+
+    }
+
+}
+
+
+/* =========================
+   ESCAPE PRODUCT NAME
+========================= */
+
+function escapeProductName(name) {
+
+    return name
+        .replace(/\\/g, "\\\\")
+        .replace(/'/g, "\\'");
+
+}
+
+
+/* =========================
+   OPEN QR
+========================= */
+
+async function openQR(productId) {
+    const modal = document.getElementById("qrModal");
+    const image = document.getElementById("qrImage");
+    const name = document.getElementById("qrProductName");
+    const status = document.getElementById("qrStatus");
+
+    modal.style.display = "flex";
+    image.style.display = "none";
+    name.textContent = "Generating QR...";
+    status.textContent = "Please wait.";
+
+    try {
+        const response = await fetch(`/api/product/${productId}/qr`);
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || "Could not generate QR.");
+        }
+
+        name.textContent = data.product.name;
+        image.src = data.qrCode;
+        image.style.display = "block";
+        status.textContent =
+            `ID: ${data.product.id} | Size: ${data.product.size} | Price: ₹${data.product.price}`;
+    } catch (error) {
+        name.textContent = "QR generation failed";
+        status.textContent = error.message;
+    }
+}
+
+function closeQR() {
+    document.getElementById("qrModal").style.display = "none";
+}
+
+
+
+
+/* =========================
+   DELETE PRODUCT
+========================= */
+
+async function deleteProduct(productId, productName) {
+
+    const confirmed =
+        confirm(
+            "Are you sure you want to delete \"" +
+            productName +
+            "\" from your inventory?"
+        );
+
+
+    if (!confirmed) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/inventory/" + encodeURIComponent(productId),
+                {
+                    method: "DELETE",
+                    credentials: "same-origin",
+                    headers: {
+                        "Accept": "application/json"
+                    }
+                }
+            );
+
+
+        const data = await response.json();
+
+
+        if (!response.ok) {
+
+            alert(data.message);
+
+            return;
+
+        }
+
+
+        alert(
+            "✓ " +
+            productName +
+            " has been deleted."
+        );
+
+
+        // Refresh product table
+        await loadInventory();
+
+        // Refresh dashboard
+        await loadDashboard();
+
+        // Refresh billing product list
+        await loadBillingProducts();
+
+    }
+
+    catch (error) {
+
+        console.error("Delete error:", error);
+
+        alert("Unable to delete product.");
+
+    }
+
+}
+
+
+/* =========================
+   ADD PRODUCT
+========================= */
+
+function addSizeRow(sizeValue = "", stockValue = "") {
+    const row = document.createElement("div");
+    row.className = "size-row";
+
+    const sizeInput = document.createElement("input");
+    sizeInput.type = "text";
+    sizeInput.placeholder = "e.g. S";
+    sizeInput.value = sizeValue;
+    sizeInput.setAttribute("aria-label", "Size name");
+    sizeInput.dataset.field = "size";
+
+    const stockInput = document.createElement("input");
+    stockInput.type = "number";
+    stockInput.min = "0";
+    stockInput.step = "1";
+    stockInput.placeholder = "0";
+    stockInput.value = stockValue;
+    stockInput.setAttribute("aria-label", "Pieces for this size");
+    stockInput.dataset.field = "stock";
+
+    const removeButton = document.createElement("button");
+    removeButton.type = "button";
+    removeButton.className = "remove-size-button";
+    removeButton.textContent = "×";
+    removeButton.setAttribute("aria-label", "Remove size row");
+    removeButton.addEventListener("click", () => {
+        const rows = document.querySelectorAll("#sizeRows .size-row");
+        if (rows.length > 1) row.remove();
+        else {
+            sizeInput.value = "";
+            stockInput.value = "";
+        }
+    });
+
+    row.append(sizeInput, stockInput, removeButton);
+    document.getElementById("sizeRows").appendChild(row);
+}
+
+function setInventoryMessage(message, kind = "") {
+    const box = document.getElementById("inventoryMessage");
+    box.textContent = message;
+    box.className = `inventory-message ${kind}`.trim();
+}
+
+async function addProduct() {
+    const name = document.getElementById("productName").value.trim();
+    const category = document.getElementById("category").value.trim();
+    const priceValue = document.getElementById("price").value;
+    const price = Number(priceValue);
+    const rows = Array.from(document.querySelectorAll("#sizeRows .size-row"));
+    const entries = rows.map(row => ({
+        row,
+        size: row.querySelector('[data-field="size"]').value.trim(),
+        stockText: row.querySelector('[data-field="stock"]').value.trim()
+    }));
+    const activeEntries = entries.filter(entry => entry.size || entry.stockText !== "");
+
+    if (!name || !category || priceValue === "") {
+        setInventoryMessage("Add the style name, category and price first.", "error");
+        return;
+    }
+    if (!Number.isFinite(price) || price <= 0) {
+        setInventoryMessage("Price needs to be a number greater than zero.", "error");
+        return;
+    }
+    if (!activeEntries.length || activeEntries.some(entry => !entry.size || entry.stockText === "")) {
+        setInventoryMessage("Give every size row a size and a stock number. Blank rows are okay.", "error");
+        return;
+    }
+    const seenSizes = new Set();
+    for (const entry of activeEntries) {
+        const key = entry.size.toLocaleLowerCase();
+        if (seenSizes.has(key)) {
+            setInventoryMessage(`You have ${entry.size} twice. Each size should only appear once in this batch.`, "error");
+            return;
+        }
+        seenSizes.add(key);
+        if (!Number.isInteger(Number(entry.stockText)) || Number(entry.stockText) < 0) {
+            setInventoryMessage(`Stock for size ${entry.size} must be a whole number (zero is okay).`, "error");
+            return;
+        }
+    }
+
+    const button = document.getElementById("addInventoryButton");
+    button.disabled = true;
+    button.innerHTML = "Adding your size run…";
+    setInventoryMessage("Saving each size to your catalogue…", "working");
+    const added = [];
+    let failure = "";
+
+    for (const entry of activeEntries) {
+        try {
+            const response = await fetch("/api/inventory", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    name,
+                    category,
+                    size: entry.size,
+                    price,
+                    stock: Number(entry.stockText)
+                })
+            });
+            const data = await response.json();
+            if (!response.ok) {
+                failure = data.message || `Could not save size ${entry.size}.`;
+                break;
+            }
+            added.push(entry);
+        } catch (error) {
+            failure = `Connection stopped while saving size ${entry.size}.`;
+            console.error("Add product error:", error);
+            break;
+        }
+    }
+
+    added.forEach(entry => {
+        entry.row.querySelector('[data-field="size"]').value = "";
+        entry.row.querySelector('[data-field="stock"]').value = "";
+    });
+
+    button.disabled = false;
+    button.innerHTML = 'Add size run <span>↗</span>';
+    if (failure) {
+        setInventoryMessage(`${added.length} size${added.length === 1 ? "" : "s"} saved (${added.map(item => item.size).join(", ") || "none"}). ${failure} Unsent rows are still here so you can retry just those.`, added.length ? "partial" : "error");
+    } else {
+        setInventoryMessage(`Lovely! Added ${name} in ${added.map(item => item.size).join(", ")}.`, "success");
+        document.getElementById("productName").value = "";
+        document.getElementById("category").value = "";
+        document.getElementById("price").value = "";
+        document.getElementById("sizeRows").replaceChildren();
+        ["S", "M", "L", "XL"].forEach(size => addSizeRow(size));
+    }
+    await loadInventory();
+    await loadDashboard();
+}
+
+
+/* =========================
+   BILLING PRODUCTS
+========================= */
+
+let billingProducts = [];
+let billingCart = new Map();
+let activeCategory = "All";
+let lastReceipt = null;
+let checkoutBusy = false;
+
+async function loadBillingProducts() {
+    try {
+        const response = await fetch("/api/inventory");
+        if (!response.ok) throw new Error("Could not load products.");
+        billingProducts = await response.json();
+        renderCategoryFilters();
+        renderBillingCatalog();
+        renderBillingCart();
+    } catch (error) {
+        console.error("Billing error:", error);
+        document.getElementById("billingCatalog").textContent = "The catalogue couldn't load just now. Please refresh and try again.";
+    }
+}
+
+function renderCategoryFilters() {
+    const box = document.getElementById("categoryFilters");
+    const categories = ["All", ...new Set(billingProducts.map(item => item.category).filter(Boolean).sort((a, b) => a.localeCompare(b)))];
+    if (!categories.includes(activeCategory)) activeCategory = "All";
+    box.replaceChildren();
+    categories.forEach(category => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = `category-chip${activeCategory === category ? " selected" : ""}`;
+        button.textContent = category;
+        button.setAttribute("aria-pressed", String(activeCategory === category));
+        button.addEventListener("click", () => {
+            activeCategory = category;
+            renderCategoryFilters();
+            renderBillingCatalog();
+        });
+        box.appendChild(button);
+    });
+}
+
+function productGlyph(category = "") {
+    const text = category.toLowerCase();
+    if (text.includes("dress") || text.includes("skirt")) return "✿";
+    if (text.includes("shoe") || text.includes("foot")) return "⌁";
+    if (text.includes("bag")) return "▱";
+    if (text.includes("access")) return "✧";
+    return "〰";
+}
+
+function renderBillingCatalog() {
+    const grid = document.getElementById("billingCatalog");
+    const search = document.getElementById("catalogSearch").value.trim().toLocaleLowerCase();
+    const available = billingProducts.filter(product => Number(product.stock) > 0);
+    const filtered = available.filter(product => {
+        const matchesCategory = activeCategory === "All" || product.category === activeCategory;
+        const matchesSearch = `${product.name} ${product.category} ${product.size}`.toLocaleLowerCase().includes(search);
+        return matchesCategory && matchesSearch;
+    });
+    document.getElementById("catalogCount").textContent = `${filtered.length} ${filtered.length === 1 ? "style" : "styles"}`;
+    grid.replaceChildren();
+
+    if (!available.length) {
+        const empty = document.createElement("div");
+        empty.className = "catalog-empty";
+        empty.innerHTML = '<span>✿</span><strong>The rails are waiting!</strong><p>Add some products to inventory, then they will pop up here.</p>';
+        grid.appendChild(empty);
+        return;
+    }
+    if (!filtered.length) {
+        const empty = document.createElement("div");
+        empty.className = "catalog-empty compact";
+        empty.textContent = "No styles match that search. Try another word or category.";
+        grid.appendChild(empty);
+        return;
+    }
+
+    filtered.forEach(product => {
+        const card = document.createElement("article");
+        card.className = "product-tile";
+        const art = document.createElement("div");
+        art.className = "product-art";
+        art.setAttribute("aria-hidden", "true");
+        const glyph = document.createElement("span");
+        glyph.textContent = productGlyph(product.category);
+        art.appendChild(glyph);
+        const details = document.createElement("div");
+        details.className = "product-tile-details";
+        const category = document.createElement("span");
+        category.className = "product-category-label";
+        category.textContent = product.category || "Clothing";
+        const name = document.createElement("h3");
+        name.textContent = product.name;
+        const bottom = document.createElement("div");
+        bottom.className = "product-tile-bottom";
+        const size = document.createElement("span");
+        size.className = "size-tag";
+        size.textContent = `Size ${product.size}`;
+        const qty = document.createElement("span");
+        qty.className = `stock-note${Number(product.stock) <= 3 ? " nearly-gone" : ""}`;
+        qty.textContent = Number(product.stock) <= 3 ? `Only ${product.stock} left` : `${product.stock} in stock`;
+        bottom.append(size, qty);
+        details.append(category, name, bottom);
+        const action = document.createElement("div");
+        action.className = "product-tile-action";
+        const price = document.createElement("strong");
+        price.textContent = `₹${Number(product.price).toLocaleString("en-IN")}`;
+        const add = document.createElement("button");
+        add.type = "button";
+        add.className = "add-to-bill";
+        add.textContent = "+ Add";
+        add.disabled = checkoutBusy;
+        add.addEventListener("click", () => addToBill(product.id));
+        action.append(price, add);
+        card.append(art, details, action);
+        grid.appendChild(card);
+    });
+}
+
+function addToBill(productId) {
+    const product = billingProducts.find(item => Number(item.id) === Number(productId));
+    if (!product) return;
+    const current = billingCart.get(Number(productId))?.quantity || 0;
+    if (current >= Number(product.stock)) {
+        showSaleMessage(`Only ${product.stock} of size ${product.size} are in stock.`, "error");
+        return;
+    }
+    billingCart.set(Number(productId), { product, quantity: current + 1 });
+    showSaleMessage("");
+    renderBillingCart();
+}
+
+function changeCartQuantity(productId, change) {
+    const id = Number(productId);
+    const item = billingCart.get(id);
+    if (!item) return;
+    const quantity = item.quantity + change;
+    if (quantity <= 0) billingCart.delete(id);
+    else if (quantity <= Number(item.product.stock)) billingCart.set(id, { ...item, quantity });
+    else showSaleMessage(`That's the whole size ${item.product.size} stock!`, "error");
+    renderBillingCart();
+}
+
+function renderBillingCart() {
+    const box = document.getElementById("cartLines");
+    box.replaceChildren();
+    const items = Array.from(billingCart.entries());
+    if (!items.length) {
+        const empty = document.createElement("div");
+        empty.className = "cart-empty";
+        empty.innerHTML = '<span>🛍️</span><strong>It’s a fresh page!</strong><p>Add a style from the shop floor to start a bill.</p>';
+        box.appendChild(empty);
+    }
+    let total = 0;
+    let count = 0;
+    items.forEach(([id, item]) => {
+        const lineTotal = Number(item.product.price) * item.quantity;
+        total += lineTotal;
+        count += item.quantity;
+        const row = document.createElement("div");
+        row.className = "cart-line";
+        const info = document.createElement("div");
+        info.className = "cart-line-info";
+        const name = document.createElement("strong");
+        name.textContent = item.product.name;
+        const meta = document.createElement("span");
+        meta.textContent = `${item.product.category} · Size ${item.product.size}`;
+        const unit = document.createElement("small");
+        unit.textContent = `₹${Number(item.product.price).toLocaleString("en-IN")} each`;
+        info.append(name, meta, unit);
+        const controls = document.createElement("div");
+        controls.className = "cart-line-controls";
+        const minus = document.createElement("button");
+        minus.type = "button";
+        minus.textContent = "−";
+        minus.setAttribute("aria-label", `Remove one ${item.product.name}`);
+        minus.disabled = checkoutBusy;
+        minus.addEventListener("click", () => changeCartQuantity(id, -1));
+        const quantity = document.createElement("span");
+        quantity.textContent = item.quantity;
+        const plus = document.createElement("button");
+        plus.type = "button";
+        plus.textContent = "+";
+        plus.setAttribute("aria-label", `Add one ${item.product.name}`);
+        plus.disabled = checkoutBusy || item.quantity >= Number(item.product.stock);
+        plus.addEventListener("click", () => changeCartQuantity(id, 1));
+        controls.append(minus, quantity, plus);
+        const amount = document.createElement("strong");
+        amount.className = "cart-line-total";
+        amount.textContent = `₹${lineTotal.toLocaleString("en-IN")}`;
+        row.append(info, controls, amount);
+        box.appendChild(row);
+    });
+    document.getElementById("cartCount").textContent = count;
+    document.getElementById("billingTotal").textContent = total.toLocaleString("en-IN");
+    document.getElementById("checkoutButton").disabled = !items.length || checkoutBusy;
+    renderBillingCatalog();
+}
+
+function showSaleMessage(message, kind = "success") {
+    const box = document.getElementById("saleMessage");
+    box.textContent = message;
+    box.className = `sale-message ${kind}`;
+}
+
+async function completeSale() {
+    if (checkoutBusy || billingCart.size === 0) return;
+    checkoutBusy = true;
+    showSaleMessage("One sec — updating the stock book…", "working");
+    renderBillingCart();
+    const soldItems = [];
+    let failure = "";
+
+    for (const [productId, item] of Array.from(billingCart.entries())) {
+        try {
+            const response = await fetch("/api/sales", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ productId, quantity: item.quantity })
+            });
+            const data = await response.json();
+            if (!response.ok) {
+                failure = data.message || `Could not ring up ${item.product.name}.`;
+                break;
+            }
+            soldItems.push({
+                id: data.sale?.id,
+                productName: item.product.name,
+                category: item.product.category,
+                size: item.product.size,
+                quantity: item.quantity,
+                total: Number(data.sale?.total ?? Number(item.product.price) * item.quantity)
+            });
+            billingCart.delete(productId);
+        } catch (error) {
+            console.error("Sale error:", error);
+            failure = "Connection stopped during checkout. Check Sales History before retrying the current line.";
+            break;
+        }
+    }
+
+    checkoutBusy = false;
+    if (soldItems.length) {
+        lastReceipt = { date: new Date(), items: soldItems, total: soldItems.reduce((sum, item) => sum + item.total, 0) };
+        document.getElementById("receiptButton").hidden = false;
+        showSaleMessage(failure ? `Some of the bill went through. ${soldItems.length} line${soldItems.length === 1 ? "" : "s"} saved; the rest stayed in your basket. ${failure}` : `Lovely! ${soldItems.length} line${soldItems.length === 1 ? "" : "s"} rung up. Stock is updated.`, failure ? "partial" : "success");
+    } else if (failure) {
+        showSaleMessage(`${failure} Your basket is still here.`, "error");
+    }
+    renderBillingCart();
+    await loadBillingProducts();
+    await loadDashboard();
+}
+
+function showReceipt() {
+    if (!lastReceipt) return;
+    const modal = document.getElementById("receiptModal");
+    document.getElementById("receiptMeta").textContent = `${lastReceipt.date.toLocaleDateString()} · ${lastReceipt.date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
+    document.getElementById("receiptTotal").textContent = `₹${lastReceipt.total.toLocaleString("en-IN")}`;
+    const lines = document.getElementById("receiptLines");
+    lines.replaceChildren();
+    lastReceipt.items.forEach(item => {
+        const row = document.createElement("div");
+        row.className = "receipt-line";
+        const info = document.createElement("span");
+        info.textContent = `${item.productName} · ${item.size} × ${item.quantity}`;
+        const amount = document.createElement("strong");
+        amount.textContent = `₹${item.total.toLocaleString("en-IN")}`;
+        row.append(info, amount);
+        lines.appendChild(row);
+    });
+    modal.hidden = false;
+}
+
+function closeReceipt() {
+    document.getElementById("receiptModal").hidden = true;
+}
+
+
+/* =========================
+   SALES HISTORY
+========================= */
+
+async function loadSales() {
+
+    try {
+
+        const response =
+            await fetch("/api/sales");
+
+
+        const sales =
+            await response.json();
+
+
+        const table =
+            document.getElementById("salesTable");
+
+
+        table.innerHTML = "";
+
+
+        if (sales.length === 0) {
+
+            table.innerHTML = `
+
+                <tr>
+
+                    <td
+                        colspan="5"
+                        class="empty-message"
+                    >
+
+                        No sales recorded yet.
+
+                    </td>
+
+                </tr>
+
+            `;
+
+            return;
+
+        }
+
+
+        sales.forEach(sale => {
+
+            const row =
+                document.createElement("tr");
+
+
+            row.innerHTML = `
+
+                <td>
+                    ${sale.id}
+                </td>
+
+                <td>
+                    ${sale.productName}
+                </td>
+
+                <td>
+                    ${sale.quantity}
+                </td>
+
+                <td>
+                    ₹${sale.total}
+                </td>
+
+                <td>
+                    ${sale.date}
+                </td>
+
+            `;
+
+
+            table.appendChild(row);
+
+        });
+
+    }
+
+    catch (error) {
+
+        console.error("Sales error:", error);
+
+    }
+
+}
+
+
+/* =========================
+   INITIAL LOAD
+========================= */
+
+[
+    ["S", ""], ["M", ""], ["L", ""], ["XL", ""]
+].forEach(([size, stock]) => addSizeRow(size, stock));
+loadDashboard();
+
+</script>
+
+</body>
+
+</html>

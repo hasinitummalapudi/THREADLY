@@ -1,0 +1,247 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THREADLY - Product Details</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f7fa;
+            color: #111827;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        h1 { color: #111827; }
+
+        .product {
+            text-align: left;
+            margin-top: 25px;
+            padding: 18px;
+            background: #f9fafb;
+            border-radius: 10px;
+        }
+
+        .product p {
+            font-size: 18px;
+            margin: 14px 0;
+            overflow-wrap: anywhere;
+        }
+
+        .stock {
+            color: #047857;
+            font-weight: bold;
+            font-size: 22px !important;
+        }
+
+        .out {
+            color: #dc2626;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 12px 20px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: wait;
+        }
+
+        #updated {
+            color: #6b7280;
+            font-size: 13px;
+            margin-top: 14px;
+        }
+
+        @media (max-width: 650px) {
+            .container {
+                margin: 20px 12px;
+                padding: 20px;
+            }
+        }
+        /* THREADLY: Marshmallow paper, Love Bird details, Desert Rose accents */
+        :root {
+            --marshmallow: #F0EEE4;
+            --love-bird: #C1DB3C;
+            --desert-rose: #CF6977;
+            --ink: #394331;
+            --paper: #fffefa;
+        }
+
+        body {
+            background-color: var(--marshmallow);
+            background-image: radial-gradient(rgba(94, 102, 63, .12) .7px, transparent .7px);
+            background-size: 18px 18px;
+            color: var(--ink);
+            font-family: "Trebuchet MS", Arial, sans-serif;
+        }
+
+        .container {
+            position: relative;
+            background: var(--paper);
+            border: 2px dashed #c8c99a;
+            border-radius: 14px 22px 16px 20px;
+            box-shadow: 6px 7px 0 rgba(78, 75, 56, .12);
+        }
+
+        .container::before {
+            content: "✿ THREADLY ✿";
+            display: block;
+            margin-bottom: 18px;
+            color: #687744;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        h1 { color: var(--ink); font-family: Georgia, serif; }
+        .product {
+            background: #fbf9f2;
+            border: 1px solid #e4dfce;
+            border-left: 5px solid var(--love-bird);
+            border-radius: 10px 15px;
+        }
+        .stock { color: #657b27; }
+        .out { color: var(--desert-rose); }
+        button {
+            background: #48543a;
+            border-radius: 8px 12px;
+            font-family: inherit;
+            font-weight: bold;
+        }
+        button:hover:not(:disabled) { background: var(--desert-rose); }
+        #updated { color: #77796d; }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <h1>THREADLY</h1>
+    <h2>Product Details</h2>
+
+    <div id="productDetails" aria-live="polite">
+        Loading product...
+    </div>
+
+    <button id="refreshButton" type="button" onclick="loadProduct()">
+        Refresh Stock
+    </button>
+
+    <p id="updated">Fetching latest inventory...</p>
+</div>
+
+<script>
+    const params = new URLSearchParams(window.location.search);
+    const productId = params.get("id");
+
+    async function loadProduct() {
+        const details = document.getElementById("productDetails");
+        const updated = document.getElementById("updated");
+        const button = document.getElementById("refreshButton");
+
+        if (!productId) {
+            details.textContent = "Product ID is missing.";
+            updated.textContent = "";
+            return;
+        }
+
+        button.disabled = true;
+        button.textContent = "Refreshing...";
+        updated.textContent = "Fetching latest stock...";
+
+        try {
+            const response = await fetch(
+                `/api/product/${encodeURIComponent(productId)}/qr?t=${Date.now()}`,
+                { cache: "no-store" }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || "Product not found.");
+            }
+
+            const product = data.product;
+
+            if (!product) {
+                throw new Error("Product details were not returned.");
+            }
+
+            // Use textContent so product data is not inserted as HTML.
+            details.replaceChildren();
+
+            const card = document.createElement("div");
+            card.className = "product";
+
+            function addLine(label, value, className = "") {
+                const p = document.createElement("p");
+                if (className) p.className = className;
+
+                const strong = document.createElement("strong");
+                strong.textContent = label + ": ";
+
+                p.appendChild(strong);
+                p.appendChild(document.createTextNode(String(value ?? "—")));
+                card.appendChild(p);
+            }
+
+            addLine("Product", product.name);
+            addLine("Category", product.category);
+            addLine("Size", product.size);
+            addLine("Price", "₹" + product.price);
+
+            const stock = Number(product.stock);
+            addLine(
+                "Available Stock",
+                Number.isFinite(stock) ? stock : "Unavailable",
+                Number.isFinite(stock) && stock <= 0
+                    ? "stock out"
+                    : "stock"
+            );
+
+            details.appendChild(card);
+
+            updated.textContent =
+                "Stock checked at " + new Date().toLocaleTimeString();
+
+        } catch (error) {
+            details.textContent = "Unable to load product. Please try again.";
+            updated.textContent = error.message;
+        } finally {
+            button.disabled = false;
+            button.textContent = "Refresh Stock";
+        }
+    }
+
+    // Load current stock when the QR page opens.
+    loadProduct();
+
+    // Automatically check for stock changes every 10 seconds.
+    setInterval(loadProduct, 10000);
+
+    // Refresh when a customer returns to this browser tab.
+    document.addEventListener("visibilitychange", () => {
+        if (!document.hidden) loadProduct();
+    });
+</script>
+</body>
+</html>
